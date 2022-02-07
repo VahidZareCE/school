@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save, post_delete
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
@@ -18,4 +18,10 @@ class ProfileTeacher(models.Model):
         return f'{self.user.first_name} {self.user.last_name}'
 
 class ProfileStudent(models.Model):
-    pass
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    national_code = models.CharField(max_length=10)
+    name_school = models.CharField(max_length=255)
+    name_course = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.national_code 
