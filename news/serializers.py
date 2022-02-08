@@ -7,6 +7,7 @@ from account.serializers import TeacherSerializer, StudentSerializer
 
 
 class NewsSerializer(serializers.ModelSerializer):
+    origin = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = News
-        fields = '__all__'
+        fields = ('id','origin', 'destination', 'topic', 'text', 'pub_date', 'exp_date', 'status')
