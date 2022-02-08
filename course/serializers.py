@@ -88,3 +88,11 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
 
     def validate_grad(self, value):
         pass
+
+class AnswerDetailTeacherSerializer(serializers.ModelSerializer):
+    exercise = ExerciseDetailSerializer(read_only=True)
+
+    class Meta:
+        model = Answer
+        fields = ('id', 'exercise', 'student', 'answer_text', 'answer_file', 'datesend', 'grad')
+        read_only_fields = ('exercise', 'student', 'answer_text', 'answer_file', 'datesend')
