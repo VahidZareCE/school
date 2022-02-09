@@ -7,7 +7,6 @@ from django.contrib.auth.hashers import make_password
 
 from account.models import ProfileStudent, ProfileTeacher, User
 
-# create user and profile teacher
 class TeacherSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
@@ -40,8 +39,6 @@ class TeacherSerializer(serializers.ModelSerializer):
 
         return profile
 
-
-# create user and profile student
 class StudentSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
@@ -74,7 +71,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
         return profile
 
-# create auth token 
+
 class TokenSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(
@@ -98,3 +95,39 @@ class TokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+
+class UpdateStudentSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model=User
+            fields=('username', 'first_name', 'last_name', 'is_student')
+            read_only_fields=('is_student',)
+
+    user = UserSerializer()
+
+    class Meta:
+        model=ProfileStudent
+        fields=('user', 'national_code', 'name_school', 'name_course')
+
+
+class UpdateTeacherSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model=User
+            fields=('username', 'first_name', 'last_name', 'is_teacher')
+            read_only_fields=('is_teacher',)
+
+    user = UserSerializer()
+
+    class Meta:
+        model=ProfileTeacher
+        fields=('user', 'national_code', 'name_school', 'name_course')
+        
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model=User
+
+    old_password=serializers.CharField(required=True, style={'input_type':'password'})
+    new_password=serializers.CharField(required=True, style={'input_type':'password'})
