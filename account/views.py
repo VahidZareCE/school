@@ -15,6 +15,7 @@ from account.serializers import (
                                     ChangePasswordSerializer
                                 )
 from account.models import User, ProfileTeacher, ProfileStudent
+from account.permissions import IsTeacher
 
 class ListCreateTeacherView(ListCreateAPIView):
     queryset = ProfileTeacher.objects.all()
@@ -30,6 +31,8 @@ class ListCreateTeacherView(ListCreateAPIView):
 class ListCreateStudentView(ListCreateAPIView):
     queryset = ProfileStudent.objects.all()
     serializer_class = StudentSerializer
+    permission_classes = (IsAuthenticated, IsTeacher,)
+    authentication_classes=(TokenAuthentication,)
 
     def post(self, request, format=None):
         serializer = StudentSerializer(data=request.data)
