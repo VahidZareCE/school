@@ -1,4 +1,5 @@
 import os
+from time import time
 import magic
 from rest_framework import serializers
 from datetime import datetime
@@ -13,6 +14,7 @@ class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercise
         fields = '__all__'
+        read_only_fields=('origin',)
 
     def validate_file(self, value):
         if value != '':
@@ -47,8 +49,9 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         ex = attrs['exercise']
+        date = datetime.now()
         dateend = Exercise.objects.get(topic=ex.topic)
-        if datetime.now() > dateend.exp_answer_date:
+        if date.date() > dateend.exp_answer_date.date() and date.time() > dateend.exp_answer_date.time():
             raise serializers.ValidationError({'پایان زمان':'زمان ارسال جواب پایان یافته'})
         return attrs
 
