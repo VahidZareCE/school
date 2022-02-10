@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from course.models import Exercise, Answer
 from course.serializers import ExerciseSerializer, AnswerSerializer, AnswerDetailSerializer, AnswerDetailTeacherSerializer
 
-from account.models import ProfileStudent
+from account.models import ProfileStudent, ProfileTeacher
 
 from .permissions import IsTeacher, IsStudent
 from rest_framework.authentication import TokenAuthentication
@@ -20,6 +20,10 @@ class ListCreateExerciesView(ListCreateAPIView):
     def get_queryset(self):
         return Exercise.objects.filter(origin__user=self.request.user)
 
+    def perform_create(self, serializer):
+        user = ProfileTeacher.objects.get(user=self.request.user)
+        serializer.save(origin=user)
+
 class UpdateDeleteExerciesView(RetrieveUpdateDestroyAPIView):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
@@ -28,6 +32,10 @@ class UpdateDeleteExerciesView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Exercise.objects.filter(origin__user=self.request.user)
+
+    def perform_create(self, serializer):
+        user = ProfileTeacher.objects.get(user=self.request.user)
+        serializer.save(origin=user)
 
 class ListCreateAnswerView(ListCreateAPIView):
     queryset = Answer.objects.all()
