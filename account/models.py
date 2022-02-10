@@ -20,8 +20,6 @@ class ProfileTeacher(models.Model):
 class ProfileStudent(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     national_code = models.CharField(max_length=10)
-    name_school = models.CharField(max_length=255)
-    name_course = models.CharField(max_length=255)
 
     def __str__(self):
         return self.national_code 
