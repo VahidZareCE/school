@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 from course.models import Exercise, Answer
+from account.serializers import StudentSerializer
 
 # from .views import ListCreateExerciesView
 
@@ -56,12 +57,11 @@ class AnswerSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_answer_file(self, value):
-        if value:
-            filetype = magic.from_buffer(value.read())
-            if not 'PDF' in filetype:
-                raise serializers.ValidationError('.اجازه ارسال دارند pdf فایل های با پسوند ')
-            else:
-                return value
+        filetype = magic.from_buffer(value.read())
+        if not 'PDF' in filetype and not 'Zip' in filetype:
+            raise serializers.ValidationError('شما می توانید فقط فایل با فرمت PDF و Zip ارسال کنید .')
+        else:
+            return value
 
 
 class AnswerDetailSerializer(serializers.ModelSerializer):
@@ -70,7 +70,7 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('exercise', 'student', 'answer_text', 'answer_file', 'datesend', 'grad')
+        fields = ('id', 'exercise', 'student', 'answer_text', 'answer_file', 'datesend', 'grad')
         read_only_fields = ('student', 'grad')
 
     def validate(self, attrs):
@@ -83,9 +83,8 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
 
     def validate_answer_file(self, value):
         filetype = magic.from_buffer(value.read())
-        print(filetype)
-        if not 'PDF' in filetype:
-            raise serializers.ValidationError('لطفا فایل با پسوند pdf ارسال کنید .')
+        if not 'PDF' in filetype and not 'Zip' in filetype:
+            raise serializers.ValidationError('شما می توانید فقط فایل با فرمت PDF و Zip ارسال کنید .')
         else:
             return value
 
@@ -94,7 +93,7 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
 
 class AnswerDetailTeacherSerializer(serializers.ModelSerializer):
     exercise = ExerciseDetailSerializer(read_only=True)
-
+    student = StudentSerializer(read_only=True)
     class Meta:
         model = Answer
         fields = ('id', 'exercise', 'student', 'answer_text', 'answer_file', 'datesend', 'grad')
