@@ -119,7 +119,7 @@ class UpdateStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=ProfileStudent
-        fields=('user', 'national_code')
+        fields=('id','user', 'national_code')
 
 
 class UpdateTeacherSerializer(serializers.ModelSerializer):
