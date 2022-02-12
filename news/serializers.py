@@ -1,5 +1,3 @@
-from dataclasses import fields
-from pyexpat import model
 from rest_framework import serializers
 
 from news.models import News
@@ -11,3 +9,10 @@ class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = ('id','origin', 'destination', 'topic', 'text', 'pub_date', 'exp_date', 'status')
+
+class NewsDetailSerializer(serializers.ModelSerializer):
+    origin = TeacherSerializer(read_only=True)
+
+    class Meta:
+        model=News
+        fields=('origin', 'destination', 'topic', 'text', 'pub_date', 'exp_date', 'status')
