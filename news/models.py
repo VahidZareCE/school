@@ -19,7 +19,3 @@ class News(models.Model):
     status = models.CharField(max_length=30, choices=STATUS)
     created_at = models.DateTimeField(auto_created=True, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-
-class NewsComment:
-    pass
