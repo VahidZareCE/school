@@ -4,6 +4,8 @@ from account.models import ProfileStudent, ProfileTeacher
 
 # Create your models here.
 
+
+
 class Exercise(models.Model):
     STATUS = (
         ('published', 'published'),
@@ -31,7 +33,8 @@ class Exercise(models.Model):
 
     def __str__(self):
         return self.topic
-
+    
+    
 class Answer(models.Model):
     exercise = models.ForeignKey('Exercise', on_delete=models.CASCADE, related_name='practice')
     student = models.ForeignKey(to=ProfileStudent, on_delete=models.PROTECT)
@@ -39,6 +42,4 @@ class Answer(models.Model):
     answer_file = models.FileField(blank=True, null=True, upload_to='answer exercises')
     grad = models.IntegerField(blank=True, default=0)
     datesend = models.DateTimeField(auto_now_add=True)
-
-
 
