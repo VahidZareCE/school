@@ -1,9 +1,9 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
 from account.serializers import (
@@ -17,7 +17,7 @@ from account.serializers import (
 from account.models import User, ProfileTeacher, ProfileStudent
 from account.permissions import IsTeacher
 
-class ListCreateTeacherView(ListCreateAPIView):
+class CreateTeacherView(CreateAPIView):
     queryset = ProfileTeacher.objects.all()
     serializer_class = TeacherSerializer
 
@@ -28,7 +28,7 @@ class ListCreateTeacherView(ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ListCreateStudentView(ListCreateAPIView):
+class CreateStudentView(CreateAPIView):
     queryset = ProfileStudent.objects.all()
     serializer_class = StudentSerializer
     permission_classes = (IsAuthenticated, IsTeacher,)
