@@ -1,10 +1,10 @@
 from django.urls import path
 
-from account.views import ListCreateTeacherView, ListCreateStudentView, CreateTokenView, UpdateProfile, ChangePassword
+from account.views import CreateTeacherView, CreateStudentView, CreateTokenView, UpdateProfile, ChangePassword
 
 urlpatterns = [
-    path('register/teacher/', ListCreateTeacherView.as_view()),
-    path('register/student/', ListCreateStudentView.as_view()),
+    path('register/teacher/', CreateTeacherView.as_view()),
+    path('register/student/', CreateStudentView.as_view()),
     path('update/profile/', UpdateProfile.as_view()),
     path('token/', CreateTokenView.as_view()),
 
