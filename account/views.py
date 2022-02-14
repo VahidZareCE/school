@@ -1,4 +1,9 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, UpdateAPIView, CreateAPIView
+# rest_framework
+from rest_framework.generics import (
+                                        RetrieveUpdateAPIView, 
+                                        UpdateAPIView, 
+                                        CreateAPIView
+                                    )
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -6,6 +11,7 @@ from rest_framework.settings import api_settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
+# app account
 from account.serializers import (
                                     TeacherSerializer, 
                                     StudentSerializer, 
@@ -17,6 +23,7 @@ from account.serializers import (
 from account.models import User, ProfileTeacher, ProfileStudent
 from account.permissions import IsTeacher
 
+# register teacher
 class CreateTeacherView(CreateAPIView):
     queryset = ProfileTeacher.objects.all()
     serializer_class = TeacherSerializer
@@ -28,6 +35,7 @@ class CreateTeacherView(CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# register student
 class CreateStudentView(CreateAPIView):
     queryset = ProfileStudent.objects.all()
     serializer_class = StudentSerializer
@@ -41,28 +49,32 @@ class CreateStudentView(CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+# login user with token
 class CreateTokenView(ObtainAuthToken):
     serializer_class = TokenSerializer
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
+# update profile user
 class UpdateProfile(RetrieveUpdateAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
+        # check type user
         if self.request.user.is_teacher:
             return UpdateTeacherSerializer
         if self.request.user.is_student:
             return UpdateStudentSerializer
 
     def get_object(self):
+        # check type user
         if self.request.user.is_teacher:
             return ProfileTeacher.objects.get(user=self.request.user)
         if self.request.user.is_student:
             return ProfileStudent.objects.get(user=self.request.user)
 
+# change password for user
 class ChangePassword(UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     model=User
