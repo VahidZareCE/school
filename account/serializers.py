@@ -1,13 +1,17 @@
+# regex python
 import re
 
+# rest_framework
 from rest_framework import serializers
 
+# django
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
-
 from django.contrib.auth.hashers import make_password
 
+# app account
 from account.models import ProfileStudent, ProfileTeacher, User
+
 
 class TeacherSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
@@ -41,6 +45,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
         return profile
 
+
 class StudentSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
@@ -60,7 +65,6 @@ class StudentSerializer(serializers.ModelSerializer):
         model = ProfileStudent
         fields = ('user', 'national_code',)
 
-    
 
     def create(self, validated_data):
         
@@ -80,6 +84,7 @@ class StudentSerializer(serializers.ModelSerializer):
         )
 
         return profile
+
 
 
 class TokenSerializer(serializers.Serializer):
@@ -141,3 +146,15 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     old_password=serializers.CharField(required=True, style={'input_type':'password'})
     new_password=serializers.CharField(required=True, style={'input_type':'password'})
+
+
+class StudentListSerilaizer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model=User
+            fields=('username', 'first_name', 'last_name')
+    user = UserSerializer()
+    
+    class Meta:
+        model=ProfileStudent
+        fields=('user', 'national_code')
