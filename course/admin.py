@@ -11,10 +11,10 @@ class ExerciseAdmin(admin.ModelAdmin):
     ordering = ('exp_answer_date', )
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('exercise', 'datesend', 'grad')
+    list_display = ('exercise', 'student', 'datesend', 'grad')
     search_fields = ('exercise', 'datesend', 'grad')
     list_filter = ('datesend',)
-    ordering = ('datesend', )
+    ordering = ('datesend',)
 
 admin.site.register(Exercise, ExerciseAdmin)
 admin.site.register(Answer, AnswerAdmin)
