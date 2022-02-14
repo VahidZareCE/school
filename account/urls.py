@@ -1,6 +1,15 @@
+# django
 from django.urls import path
 
-from account.views import CreateTeacherView, CreateStudentView, CreateTokenView, UpdateProfile, ChangePassword
+# app account
+from account.views import (
+                            CreateTeacherView, 
+                            CreateStudentView, 
+                            CreateTokenView, 
+                            UpdateProfile, 
+                            ChangePassword
+                        )
+
 
 urlpatterns = [
     path('register/teacher/', CreateTeacherView.as_view()),
