@@ -1,5 +1,7 @@
+# django
 from django.urls import path
 
+# app course
 from course.views import (
                             ListCreateExerciesView, 
                             UpdateDeleteExerciesView, 
