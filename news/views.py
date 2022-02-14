@@ -1,22 +1,27 @@
-from urllib import request
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
+# rest_framework
+from rest_framework.generics import (
+                                        ListCreateAPIView, 
+                                        RetrieveUpdateDestroyAPIView, 
+                                        ListAPIView
+                                    )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from rest_framework import filters
 
+# app news
 from news.serializers import NewsSerializer, NewsDetailSerializer
 from news.models import News
 from news.permissions import IsStudent, IsTeacher
 
+# app account
 from account.models import ProfileStudent, ProfileTeacher
 
 
+# list and create news just for teacher
 class ListCreateNews(ListCreateAPIView):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsTeacher)
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['destination__national_code', 'topic', 'status']
     ordering_fields = ['pub_date', 'exp_date']
 
@@ -28,6 +33,7 @@ class ListCreateNews(ListCreateAPIView):
         user = ProfileTeacher.objects.get(user=self.request.user)
         return News.objects.filter(origin=user)
 
+# update and delete news just for teacher
 class UpdateDeleteNews(RetrieveUpdateDestroyAPIView):
     queryset = News.objects.all()
     serializer_class = NewsDetailSerializer
@@ -42,12 +48,12 @@ class UpdateDeleteNews(RetrieveUpdateDestroyAPIView):
         user = ProfileTeacher.objects.get(user=self.request.user)
         return News.objects.filter(origin=user)
 
+# list news just for student
 class ListNewsStudent(ListAPIView):
     queryset = News.objects.all()
     serializer_class = NewsDetailSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsStudent)
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['origin__user__first_name', 'origin__user__last_name', 'topic']
     ordering_fields = ['pub_date', 'exp_date']
 
