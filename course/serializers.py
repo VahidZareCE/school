@@ -1,14 +1,16 @@
-import os
-from time import time
+# pakage python
 import magic
-from rest_framework import serializers
 from datetime import datetime
 
+# rest_framework
+from rest_framework import serializers
 
+# app course
 from course.models import Exercise, Answer
-from account.serializers import StudentSerializer
 
-# from .views import ListCreateExerciesView
+# app account
+from account.serializers import StudentListSerilaizer
+
 
 
 class ExerciseSerializer(serializers.ModelSerializer):
@@ -18,9 +20,8 @@ class ExerciseSerializer(serializers.ModelSerializer):
         read_only_fields=('origin',)
 
     def validate_file(self, value):
-        if value != '':
-            filetype = magic.from_buffer(value.read())
-            print(filetype)
+        if value:
+            filetype = magic.from_buffer(value.read()) # check file type
             if not 'PDF' in filetype:
                 raise serializers.ValidationError('لطفا فایل با پسوند pdf ارسال کنید .')
             else:
@@ -33,7 +34,7 @@ class ExerciseDetailSerializer(serializers.ModelSerializer):
 
     def validate_file(self, value):
         if value:
-            filetype = magic.from_buffer(value.read())
+            filetype = magic.from_buffer(value.read()) # check file type
             if not 'PDF' in filetype:
                 raise serializers.ValidationError('لطفا فایل با پسوند pdf ارسال کنید .')
             else:
@@ -57,7 +58,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_answer_file(self, value):
-        filetype = magic.from_buffer(value.read())
+        filetype = magic.from_buffer(value.read()) # check file type
         if not 'PDF' in filetype and not 'Zip' in filetype:
             raise serializers.ValidationError('شما می توانید فقط فایل با فرمت PDF و Zip ارسال کنید .')
         else:
@@ -82,18 +83,15 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_answer_file(self, value):
-        filetype = magic.from_buffer(value.read())
+        filetype = magic.from_buffer(value.read()) # check file type
         if not 'PDF' in filetype and not 'Zip' in filetype:
             raise serializers.ValidationError('شما می توانید فقط فایل با فرمت PDF و Zip ارسال کنید .')
         else:
             return value
 
-    def validate_grad(self, value):
-        pass
-
 class AnswerDetailTeacherSerializer(serializers.ModelSerializer):
     exercise = ExerciseDetailSerializer(read_only=True)
-    student = StudentSerializer(read_only=True)
+    student = StudentListSerilaizer(read_only=True)
     class Meta:
         model = Answer
         fields = ('id', 'exercise', 'student', 'answer_text', 'answer_file', 'datesend', 'grad')
