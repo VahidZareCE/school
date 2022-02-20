@@ -26,6 +26,7 @@ class ExerciseSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('لطفا فایل با پسوند pdf ارسال کنید .')
             else:
                 return value
+        return value
 
 class ExerciseDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,6 +40,7 @@ class ExerciseDetailSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('لطفا فایل با پسوند pdf ارسال کنید .')
             else:
                 return value
+        return value
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -58,11 +60,13 @@ class AnswerSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_answer_file(self, value):
-        filetype = magic.from_buffer(value.read()) # check file type
-        if not 'PDF' in filetype and not 'Zip' in filetype:
-            raise serializers.ValidationError('شما می توانید فقط فایل با فرمت PDF و Zip ارسال کنید .')
-        else:
-            return value
+        if value:
+            filetype = magic.from_buffer(value.read()) # check file type
+            if not 'PDF' in filetype and not 'Zip' in filetype:
+                raise serializers.ValidationError('شما می توانید فقط فایل با فرمت PDF و Zip ارسال کنید .')
+            else:
+                return value
+        return value
 
 
 class AnswerDetailSerializer(serializers.ModelSerializer):
@@ -83,11 +87,13 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_answer_file(self, value):
-        filetype = magic.from_buffer(value.read()) # check file type
-        if not 'PDF' in filetype and not 'Zip' in filetype:
-            raise serializers.ValidationError('شما می توانید فقط فایل با فرمت PDF و Zip ارسال کنید .')
-        else:
-            return value
+        if value:
+            filetype = magic.from_buffer(value.read()) # check file type
+            if not 'PDF' in filetype and not 'Zip' in filetype:
+                raise serializers.ValidationError('شما می توانید فقط فایل با فرمت PDF و Zip ارسال کنید .')
+            else:
+                return value
+        return value
 
 class AnswerDetailTeacherSerializer(serializers.ModelSerializer):
     exercise = ExerciseDetailSerializer(read_only=True)
